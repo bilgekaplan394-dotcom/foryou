@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0a1a;
+    --bg-mid: #0f0f2e;
+    --gold: #e8c47c;
+    --gold-light: #f5dfa3;
+    --rose: #d4788a;
+    --rose-light: #e8a0ae;
+    --lavender: #9b8ec4;
+    --cream: #f0e6d3;
+    --star: #ffffffdd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--cream);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 300;
+    cursor: default;
+  }
+
+  /* ── Stars Canvas ── */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── Sections ── */
+  .section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 60px 24px;
+  }
+
+  /* ── Landing ── */
+  .landing {
+    text-align: center;
+    perspective: 800px;
+  }
+
+  .envelope-container {
+    position: relative;
+    width: 260px;
+    height: 180px;
+    margin: 0 auto 50px;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+
+  .envelope-container:hover {
+    transform: scale(1.05);
+  }
+
+  .envelope {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .envelope-body {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #c9a96e, #a07d4a);
+    border-radius: 6px;
+    position: absolute;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+
+  .envelope-flap {
+    width: 0;
+    height: 0;
+    border-left: 130px solid transparent;
+    border-right: 130px solid transparent;
+    border-top: 100px solid #b8924f;
+    position: absolute;
+    top: 0;
+    transform-origin: top center;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+  }
+
+  .envelope-flap.open {
+    transform: rotateX(180deg);
+  }
+
+  .envelope-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    z-index: 3;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  .letter-paper {
+    width: 220px;
+    height: 140px;
+    background: var(--cream);
+    position: absolute;
+    left: 20px;
+    bottom: 10px;
+    border-radius: 3px;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .letter-paper.rise {
+    transform: translateY(-120px);
+  }
+
+  .letter-paper span {
+    font-family: 'Cormorant Garamond', serif;
+    color: #4a3520;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.9s;
+  }
+
+  .letter-paper.rise span {
+    opacity: 1;
+  }
+
+  .landing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.5s;
+  }
+
+  .landing-sub {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 0.9s;
+    margin-bottom: 40px;
+  }
+
+  .scroll-hint {
+    opacity: 0;
+    animation: fadeUp 1.2s ease forwards 1.4s;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .scroll-hint .arrow {
+    display: block;
+    margin-top: 12px;
+    animation: bobDown 2s ease-in-out infinite;
+    font-size: 1.2rem;
+  }
+
+  @keyframes bobDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Reasons Section ── */
+  .reasons-section {
+    padding: 80px 24px 120px;
+  }
+
+  .section-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 60px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+  }
+
+  .section-label.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .reason-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 32px 28px;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.6s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .reason-card .tap-hint {
+    display: block;
+    margin-top: 14px;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(232,196,124,0.35);
+    transition: color 0.3s ease;
+  }
+
+  .reason-card:hover .tap-hint {
+    color: rgba(232,196,124,0.6);
+  }
+
+  /* ── Photo Modal (Polaroid) ── */
+  .photo-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 15, 0);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: background 0.4s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .photo-overlay.active {
+    background: rgba(5, 5, 15, 0.85);
+    pointer-events: all;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .polaroid {
+    background: #faf6f0;
+    padding: 16px 16px 52px 16px;
+    border-radius: 4px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+    transform: scale(0.3) rotate(-8deg);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    max-width: 340px;
+    width: calc(100vw - 60px);
+  }
+
+  .photo-overlay.active .polaroid {
+    transform: scale(1) rotate(var(--rot, 0deg));
+    opacity: 1;
+  }
+
+  .polaroid-img-wrapper {
+    width: 100%;
+    max-height: 60vh;
+    min-height: 200px;
+    background: #1a1520;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+  .polaroid-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #1a1520;
+}
+
+  .polaroid-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #a09080;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .polaroid-placeholder .camera-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    opacity: 0.5;
+  }
+
+  .polaroid-caption {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: #5a4a3a;
+    padding: 0 12px;
+  }
+
+  .polaroid-close {
+    position: absolute;
+    top: -40px;
+    right: -4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .polaroid-close:hover {
+    background: rgba(255,255,255,0.15);
+    color: white;
+  }
+
+  /* hearts burst when polaroid opens */
+  .heart-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1001;
+    font-size: 16px;
+    animation: heartFloat 1.2s ease-out forwards;
+  }
+
+  @keyframes heartFloat {
+    0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--rot)); }
+  }
+
+  /* sticker tape effect on polaroid */
+  .tape {
+    position: absolute;
+    width: 80px;
+    height: 24px;
+    background: rgba(255,255,220,0.35);
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    border-radius: 2px;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .reason-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reason-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(232,196,124,0.04), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .reason-card:hover::before {
+    opacity: 1;
+  }
+
+  .reason-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--rose);
+    opacity: 0.6;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .reason-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(240,230,211,0.85);
+  }
+
+  /* ── Timeline Section ── */
+  .timeline-section {
+    padding: 80px 24px 120px;
+  }
+
+  .timeline {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold) 10%, var(--rose) 90%, transparent);
+  }
+
+  .timeline-item {
+    padding-left: 64px;
+    margin-bottom: 48px;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.7s ease;
+  }
+
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 17px;
+    top: 6px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--bg-deep);
+    border: 2px solid var(--gold);
+    transition: all 0.3s ease;
+  }
+
+  .timeline-item.visible .timeline-dot {
+    box-shadow: 0 0 12px rgba(232,196,124,0.4);
+  }
+
+  .timeline-date {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lavender);
+    margin-bottom: 6px;
+  }
+
+  .timeline-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+
+  .timeline-desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: rgba(240,230,211,0.65);
+  }
+
+  /* ── Constellation / Promise Section ── */
+  .constellation-section {
+    text-align: center;
+    position: relative;
+  }
+
+  .constellation-section .section-label {
+    margin-bottom: 20px;
+  }
+
+  .constellation-sub {
+    font-size: 0.85rem;
+    color: rgba(240,230,211,0.5);
+    margin-bottom: 60px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease 0.2s;
+  }
+
+  .constellation-sub.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .promises-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    max-width: 700px;
+  }
+
+  .promise-bubble {
+    background: rgba(155,142,196,0.1);
+    border: 1px solid rgba(155,142,196,0.2);
+    border-radius: 100px;
+    padding: 12px 24px;
+    font-size: 0.85rem;
+    color: var(--lavender);
+    cursor: default;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.5s ease;
+    position: relative;
+  }
+
+  .promise-bubble.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .promise-bubble:hover {
+    background: rgba(155,142,196,0.18);
+    border-color: rgba(155,142,196,0.35);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(155,142,196,0.15);
+  }
+
+  /* ── Final Letter ── */
+  .final-section {
+    text-align: center;
+    padding: 80px 24px 120px;
+  }
+
+  .final-letter {
+    max-width: 560px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(232,196,124,0.12);
+    border-radius: 20px;
+    padding: 48px 36px;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s ease;
+  }
+
+  .final-letter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .final-letter p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.9;
+    color: rgba(240,230,211,0.8);
+    margin-bottom: 24px;
+  }
+
+  .final-letter p:last-of-type {
+    margin-bottom: 40px;
+  }
+
+  .signature {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--rose-light);
+    font-style: italic;
+  }
+
+  .final-heart {
+    margin-top: 40px;
+    font-size: 2rem;
+    animation: heartbeat 2s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  /* ── Shooting Stars ── */
+  .shooting-star {
+    position: fixed;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--star), transparent);
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  /* ── Music Toggle ── */
+  .music-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--cream);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .music-toggle:hover {
+    background: rgba(255,255,255,0.1);
+    transform: scale(1.1);
+  }
+
+  /* ── Sparkle cursor effect ── */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: sparkleFade 0.6s ease forwards;
+  }
+
+  @keyframes sparkleFade {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0) translateY(-20px); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .section {
+      padding: 50px 20px;
+      min-height: auto;
+    }
+
+    .landing {
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 60px;
+    }
+
+    .landing-title {
+      font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .landing-sub {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+    }
+
+    .reasons-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .reason-card {
+      padding: 24px 20px;
+    }
+
+    .reason-number {
+      font-size: 2rem;
+    }
+
+    .section-label {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      margin-bottom: 40px;
+    }
+
+    .timeline::before {
+      left: 16px;
+    }
+
+    .timeline-item {
+      padding-left: 48px;
+      margin-bottom: 36px;
+    }
+
+    .timeline-dot {
+      left: 10px;
+      width: 13px;
+      height: 13px;
+    }
+
+    .timeline-title {
+      font-size: 1.1rem;
+    }
+
+    .promises-container {
+      gap: 10px;
+    }
+
+    .promise-bubble {
+      padding: 10px 18px;
+      font-size: 0.8rem;
+    }
+
+    .final-letter {
+      padding: 32px 20px;
+      border-radius: 16px;
+    }
+
+    .final-letter p {
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .signature {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .section {
+      padding: 40px 16px;
+    }
+
+    .envelope-container {
+      width: 200px;
+      height: 140px;
+    }
+
+    .envelope-flap {
+      border-left-width: 100px;
+      border-right-width: 100px;
+      border-top-width: 78px;
+    }
+
+    .letter-paper {
+      width: 170px;
+      height: 110px;
+      left: 15px;
+    }
+
+    .letter-paper span {
+      font-size: 12px;
+    }
+
+    .landing-title {
+      font-size: 1.8rem;
+    }
+
+    .reason-text {
+      font-size: 0.85rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.8rem;
+    }
+
+    .final-letter p {
+      font-size: 0.95rem;
+    }
+
+    .promise-bubble {
+      padding: 8px 14px;
+      font-size: 0.75rem;
+    }
+
+    .polaroid {
+      width: calc(100vw - 40px);
+      padding: 12px 12px 44px 12px;
+    }
+
+    .polaroid-caption {
+      font-size: 0.85rem;
+      bottom: 10px;
+    }
+  }
+
+  /* ── Fix for iOS Safari ── */
+  @supports (-webkit-touch-callout: none) {
+    .section {
+      min-height: -webkit-fill-available;
+    }
+    .landing {
+      min-height: -webkit-fill-available;
+    }
+  }
+
+  /* ── Disable sparkle cursor on touch devices ── */
+  @media (hover: none) and (pointer: coarse) {
+    .sparkle { display: none; }
+    .promise-bubble:active {
+      background: rgba(155,142,196,0.18);
+      border-color: rgba(155,142,196,0.35);
+      transform: scale(1.05);
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- ── Landing ── -->
+<section class="section landing" id="landing">
+  <div class="envelope-container" id="envelope" onclick="openEnvelope()">
+    <div class="envelope">
+      <div class="letter-paper" id="letter-paper">
+        <span>a letter for you</span>
+      </div>
+      <div class="envelope-body"></div>
+      <div class="envelope-flap" id="envelope-flap"></div>
+      <div class="envelope-heart">💌</div>
+    </div>
+  </div>
+  <h1 class="landing-title">you are my everything</h1>
+  <p class="landing-sub">i hope you like it ma lav</p>
+  <div class="scroll-hint">
+    scroll down to explore
+    <span class="arrow">↓</span>
+  </div>
+</section>
+
+<!-- ── Reasons I Love You ── -->
+<section class="section reasons-section" id="reasons">
+  <h2 class="section-label" data-animate>10 Reasons I Love You</h2>
+  <div class="reasons-grid">
+    <div class="reason-card" data-animate data-delay="0" data-photo="photos/1.jpg" data-caption="your laugh is my favorite sound">
+      <div class="reason-number">01</div>
+      <div class="reason-text">the way you laugh it's the sound i would choose if i could only hear one thing for the rest of my life.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="100" data-photo="photos/2.jpg" data-caption="silly goose">
+      <div class="reason-number">02</div>
+      <div class="reason-text">the amount of hate about men. i like it a lot. </div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="200" data-photo="photos/3.jpg" data-caption="thank you for being so beatiful">
+      <div class="reason-number">03</div>
+      <div class="reason-text">youre the most beatiful person i have ever seen in my life. </div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="300" data-photo="photos/4.jpg" data-caption="ma lav & ma laav">
+      <div class="reason-number">04</div>
+      <div class="reason-text">the way you say ma laav. i like everything you say but its extra cute when you say ma laav.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="400" data-photo="photos/5.jpg" data-caption="my dairy">
+      <div class="reason-number">05</div>
+      <div class="reason-text">how safe i feel telling you anything, even bad news sometimes sorry ma lav.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="500" data-photo="photos/6.jpeg" data-caption="you remember everything">
+      <div class="reason-number">06</div>
+      <div class="reason-text">the way you remember literally everything. and talk about it later. it impresses me so much.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="600" data-photo="photos/7.jpeg" data-caption="supporting girlfiend">
+      <div class="reason-number">07</div>
+      <div class="reason-text">the way you support me all the time. even when i fail. you always support me</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="700" data-photo="photos/8.jpeg" data-caption="distance has nothing on us">
+      <div class="reason-number">08</div>
+      <div class="reason-text">the way you believe in me no matter what.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="800" data-photo="photos/9.jpeg" data-caption="our future is amazing">
+      <div class="reason-number">09</div>
+      <div class="reason-text">the way we build our future together. you try so hard for our future</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+    <div class="reason-card" data-animate data-delay="900" data-photo="photos/10.jpeg" data-caption="simply, endlessly, you">
+      <div class="reason-number">10</div>
+      <div class="reason-text">simply you. everything you do, you say, you eat. i love you so much.</div>
+      <span class="tap-hint">tap to see a memory ✦</span>
+    </div>
+  </div>
+
+  <!-- Photo Modal -->
+  <div class="photo-overlay" id="photoOverlay">
+    <div class="polaroid" id="polaroid">
+      <div class="tape"></div>
+      <button class="polaroid-close" id="polaroidClose">✕</button>
+      <div class="polaroid-img-wrapper" id="polaroidImgWrapper">
+        <!-- filled dynamically -->
+      </div>
+      <div class="polaroid-caption" id="polaroidCaption"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Our Timeline ── -->
+<section class="section timeline-section" id="timeline">
+  <h2 class="section-label" data-animate>Our Story So Far</h2>
+  <div class="timeline">
+    <div class="timeline-item" data-animate>
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">the beginning</div>
+      <div class="timeline-title">when we first met</div>
+      <div class="timeline-desc">i was literally shaking so hard in the metro in paris. im so proud of myself for being brave enough to talk to you btw.</div>
+    </div>
+    <div class="timeline-item" data-animate data-delay="150">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">calls</div>
+      <div class="timeline-title">calls</div>
+      <div class="timeline-desc">when we first started talking on the phone i was so nervous i didnt know what to say. but your voice was too cute.</div>
+    </div>
+    <div class="timeline-item" data-animate data-delay="300">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">i like you</div>
+      <div class="timeline-title">officialy</div>
+      <div class="timeline-desc">looks like ive been talking about myself for a while now but when i told you i like you i thought i was having heart attack. then you replied and you started to make me the happiest person ever.</div>
+    </div>
+    <div class="timeline-item" data-animate data-delay="450">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">distance</div>
+      <div class="timeline-title">overseas relationship</div>
+      <div class="timeline-desc">maybe we are lucky that we started the relationship. so we love each other more and more every day.</div>
+    </div>
+    <div class="timeline-item" data-animate data-delay="600">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">right Now</div>
+      <div class="timeline-title">countdown</div>
+      <div class="timeline-desc">i cant wait to be with you again. i miss you so much. i think about you all the time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Promises / Constellation ── -->
+<section class="section constellation-section" id="promises">
+  <h2 class="section-label" data-animate>my promises to you</h2>
+  <p class="constellation-sub" data-animate>hover over each one ✦</p>
+  <div class="promises-container">
+    <div class="promise-bubble" data-animate data-delay="0">i will be with you forever</div>
+    <div class="promise-bubble" data-animate data-delay="80">i will give you everything i have</div>
+    <div class="promise-bubble" data-animate data-delay="160">i will support you no matter what</div>
+    <div class="promise-bubble" data-animate data-delay="240">i will make you feel loved every day</div>
+    <div class="promise-bubble" data-animate data-delay="320">i will hold your hand everyday when we go out</div>
+    <div class="promise-bubble" data-animate data-delay="400">i will make you happy forever</div>
+    <div class="promise-bubble" data-animate data-delay="480">i will not feed you with o*ion</div>
+    <div class="promise-bubble" data-animate data-delay="560">i will always be loyal</div>
+    <div class="promise-bubble" data-animate data-delay="640">i will never make you cry (i will try my best at least sorry ma lav)</div>
+    <div class="promise-bubble" data-animate data-delay="720">we will be together forever</div>
+  </div>
+</section>
+
+<!-- ── Final Letter ── -->
+<section class="section final-section" id="final">
+  <div class="final-letter" data-animate>
+    <p>to my silly goose ma lav</p>
+    <p>its very hard for me to write you a letter since i cant describe how much i love you with words. i dont know what i would do without you. i seriously cant imagine myself without you. you are making me the happiest person every day without efford. im sooo lucky to have you in my life. </p>
+    <p>i always think of you first when i wake up and last when i go to sleep. you are my everything. when i got a notification, i check my phone so fast and hope its you. i love everything about you. i love the people you love and i hate the people you hate.</p>
+    <p>when i see a video on instagram which cat/dog/house/bird are you based on your month, i never skip that post without looking at august.</p>
+    <p>when i go to a souvenir shop, i always look for your name on magnets. i always look for your name on mugs.</p>
+    <p>when i see a dusty window, i always write letter H on that window. youre always in my head and my heart.</p>
+    <p>im so proud of you. ive never been more proud of anyone in my life. you always do the right thing. i feel very bad so often because you work so hard and i cant even help you. i wish i could give you so many gifts. i promise it will happen one day</p>
+    <p>i will always be with you until the end of time.</p>
+    <p>i love you. forever.</p>
+    <div class="signature">bilgehan ♡ hannah</div>
+    <div class="final-heart">✦</div>
+  </div>
+</section>
+
+<script>
+// ── Stars Background ──
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function createStars() {
+  stars = [];
+  const isMobile = window.innerWidth < 768;
+  const count = isMobile 
+    ? Math.floor((canvas.width * canvas.height) / 6000)
+    : Math.floor((canvas.width * canvas.height) / 3000);
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      alpha: Math.random() * 0.8 + 0.2,
+      speed: Math.random() * 0.005 + 0.002,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const time = Date.now() * 0.001;
+  stars.forEach(s => {
+    const twinkle = Math.sin(time * s.speed * 100 + s.phase) * 0.3 + 0.7;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha * twinkle})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resizeCanvas();
+createStars();
+drawStars();
+window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
+
+// ── Envelope ──
+let envelopeOpened = false;
+function openEnvelope() {
+  if (envelopeOpened) return;
+  envelopeOpened = true;
+  document.getElementById('envelope-flap').classList.add('open');
+  document.getElementById('letter-paper').classList.add('rise');
+}
+
+// ── Photo Modal ──
+const overlay = document.getElementById('photoOverlay');
+const polaroid = document.getElementById('polaroid');
+const polaroidImgWrapper = document.getElementById('polaroidImgWrapper');
+const polaroidCaption = document.getElementById('polaroidCaption');
+const polaroidClose = document.getElementById('polaroidClose');
+
+function burstHearts(x, y) {
+  const hearts = ['♥', '♡', '❤', '💕', '✦'];
+  for (let i = 0; i < 8; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-particle';
+    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    h.style.left = x + 'px';
+    h.style.top = y + 'px';
+    h.style.color = ['#e8c47c', '#d4788a', '#9b8ec4', '#e8a0ae'][Math.floor(Math.random() * 4)];
+    const angle = (Math.PI * 2 / 8) * i + (Math.random() - 0.5);
+    const dist = 60 + Math.random() * 80;
+    h.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+    h.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+    h.style.setProperty('--rot', (Math.random() * 60 - 30) + 'deg');
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1200);
+  }
+}
+
+function openPhoto(card, e) {
+  const photoSrc = card.dataset.photo;
+  const caption = card.dataset.caption;
+
+  // Build polaroid content
+  if (photoSrc && photoSrc.trim() !== '') {
+    polaroidImgWrapper.innerHTML = `<img src="${photoSrc}" alt="our memory" />`;
+  } else {
+    polaroidImgWrapper.innerHTML = `
+      <div class="polaroid-placeholder">
+        <div class="camera-icon">📷</div>
+        <div>your photo here</div>
+        <div style="margin-top:4px;font-size:0.65rem;opacity:0.6">add src to data-photo</div>
+      </div>
+    `;
+  }
+  polaroidCaption.textContent = caption || '';
+
+  // Random slight rotation for charm
+  const rot = (Math.random() - 0.5) * 6;
+  polaroid.style.setProperty('--rot', rot + 'deg');
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Heart burst from tap point
+  const cx = e.clientX || (window.innerWidth / 2);
+  const cy = e.clientY || (window.innerHeight / 2);
+  setTimeout(() => burstHearts(cx, cy), 200);
+}
+
+function closePhoto() {
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Attach to all reason cards
+document.querySelectorAll('.reason-card').forEach(card => {
+  card.addEventListener('click', (e) => openPhoto(card, e));
+});
+
+polaroidClose.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closePhoto();
+});
+
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) closePhoto();
+});
+
+// Close on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePhoto();
+});
+
+// ── Scroll Animations ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.dataset.delay || 0;
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, parseInt(delay));
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+// ── Shooting Stars ──
+function createShootingStar() {
+  const star = document.createElement('div');
+  star.className = 'shooting-star';
+  star.style.top = Math.random() * 50 + '%';
+  star.style.left = Math.random() * 80 + '%';
+  star.style.transform = `rotate(${-20 + Math.random() * -20}deg)`;
+  document.body.appendChild(star);
+
+  star.animate([
+    { opacity: 0, transform: `rotate(${-20 + Math.random() * -20}deg) translateX(0)` },
+    { opacity: 0.8, offset: 0.3 },
+    { opacity: 0, transform: `rotate(${-20 + Math.random() * -20}deg) translateX(300px)` }
+  ], {
+    duration: 1200,
+    easing: 'ease-out'
+  }).onfinish = () => star.remove();
+}
+
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+setInterval(createShootingStar, isTouchDevice ? 6000 : 4000);
+
+// ── Sparkle Cursor (desktop only) ──
+if (!isTouchDevice) {
+  let sparkleThrottle = 0;
+  document.addEventListener('mousemove', (e) => {
+    if (Date.now() - sparkleThrottle < 80) return;
+    sparkleThrottle = Date.now();
+
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = e.clientX - 3 + 'px';
+    sparkle.style.top = e.clientY - 3 + 'px';
+
+    const colors = ['#e8c47c', '#d4788a', '#9b8ec4', '#ffffff'];
+    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+    document.body.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 600);
+  });
+}
+</script>
+</body>
+</html>
